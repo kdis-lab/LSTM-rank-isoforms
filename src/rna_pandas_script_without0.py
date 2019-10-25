@@ -36,7 +36,7 @@ def fase_2(dataframe, ends, top_gen, rankings):
 
 	rows = []
 	for s in samples:
-		# se copia el dataframe para poder luego insertar nuevas columnas
+		# the dataframe is copied so that new columns can be inserted later
 		sample = pandas.concat([frame['GeneID'], frame['IsoID'],frame[s]], 
 							   axis=1, keys=['GeneID', 'IsoID', s])
 
@@ -56,32 +56,25 @@ def fase_2(dataframe, ends, top_gen, rankings):
 		sample.loc[sample['var_gen'].isna(), 'var_gen'] = 0
 		sample['total_iso'] = pandas.Series(rank_total_iso, index=sample.index)
 
-		# eliminar los genes que en esta muestra no se expresaron
-		#sample = sample[sample.sum_gen != 0]
-		#sample = pandas.concat([sample[i] for i in sample.columns],axis=1, keys=sample.columns)
-
 		sample.sort_values(['sum_gen','total_gen','var_gen',s,'total_iso'], 
 						   ascending=[False,False,False,False,False], inplace=True)
 
 		# top genes
 		sel_genes = sample['GeneID'].groupby(sample['GeneID'], sort=False)
-		# indices agrupados por cada gen
 		sel_genes = [i[1].index.values for i in sel_genes]
 
 		if len(sel_genes) > top_gen:
 			count = len(sel_genes) - top_gen
-			# eliminamos los genes que sobran al final
+
 			sample_1 = dropgen(sample,s,[j for i in sel_genes[-count:] 
 											for j in i])
-			# eliminamos los genes que sobran al inicio
+
 			sample_2 = dropgen(sample,s,[j for i in sel_genes[:count] 
 											for j in i])
 		else:
 			sample_1 = dropgen(sample,s,[])
 			sample_2 = dropgen(sample,s,[])
 
-		# invertir el dataframe de los genes menos expresados
-		# ahora las isoformas menores van primero
 		sample_2 = sample_2.iloc[::-1]
 
 		rows.append({
@@ -97,7 +90,7 @@ def ranking_classes(dataframe, ends):
 	N = ['GeneID', 'IsoID'] + N
 	frame = pandas.concat([dataframe[i] for i in N],axis=1, keys=N)
 	
-	# ranking general de los genes
+	# genes overall ranking
 	genes = frame.groupby(frame['GeneID'])
 	sum_genes = genes.sum()
 	ranking_genes = {i: 0 for i in frame['GeneID']}
@@ -108,12 +101,11 @@ def ranking_classes(dataframe, ends):
 			ranking_genes[curr_gen.index.values[i]] = ranking_genes[curr_gen.index.values[i]] + i
 	rank_total_gen = numpy.asarray([ranking_genes[i] for i in frame['GeneID']])
 	
-	# ranking general de las isoformas
+	# isoforms overall ranking
 	ranking_isoformas = {i: 0 for i in frame['IsoID']}
 	for i in genes:
 		curr_isos = i[1]
 		for name_sample in frame.columns[2:]:
-			# por cada gen se toman las isoformas y se hace un ranking por cada muestra
 			curr_gen = curr_isos[['IsoID',name_sample]].sort_values(name_sample)
 			for j in range(len(curr_gen.index.values)):
 				ranking_isoformas[curr_gen['IsoID'][curr_gen.index.values[j]]] = ranking_isoformas[curr_gen['IsoID'][curr_gen.index.values[j]]] + j 
@@ -137,14 +129,14 @@ def iscero(data):
 def fase_0(source, top_gen, classes=('N','T')):
 	data = fase_1(source)
 	data = [x.split(',') for x in data]
-	# total isoformas
-	print('isoformas', len(data) - 1)
-	# contar cuantas isoformas son 0 en todas las muestras
+
+	print('isoforms', len(data) - 1)
+
 	count_iso_cero = [i for i in data[1:] if iscero(i[2:])]
-	print('isoformas cero', len(count_iso_cero))
-	# eliminar todas las isoformas que son 0 en todas las muestras
+	print('isoforms 0', len(count_iso_cero))
+
 	data = data[:1] + [i for i in data[1:] if not iscero(i[2:])]
-	print('isoformas a tratar', len(data) - 1)
+	print('isoforms to try', len(data) - 1)
 	data =  [numpy.asarray(i) for i in data]
 	data = numpy.asarray(data)
 
@@ -154,7 +146,6 @@ def fase_0(source, top_gen, classes=('N','T')):
 	for col in dataframe.columns[2:]:
 		dataframe[col] = pandas.to_numeric(dataframe[col])
 
-	# contar isoformas por genes
 	isocount = dataframe[['GeneID', 'IsoID']].groupby('GeneID').count().sort_values('IsoID', ascending=False)
 
 	rankings = {}
@@ -247,14 +238,13 @@ def get_data(filepath, top_gen, classes=('N','T')):
 def mean_isoforms(source):
 	data = fase_1(source)
 	data = [x.split(',') for x in data]
-	# total isoformas
-	print('isoformas', len(data) - 1)
-	# contar cuantas isoformas son 0 en todas las muestras
+	# isoforms
+	print('isoforms', len(data) - 1)
 	count_iso_cero = [i for i in data[1:] if iscero(i[2:])]
-	print('isoformas cero', len(count_iso_cero))
-	# eliminar todas las isoformas que son 0 en todas las muestras
+	print('isoforms 0', len(count_iso_cero))
+
 	data = data[:1] + [i for i in data[1:] if not iscero(i[2:])]
-	print('isoformas a tratar', len(data) - 1)
+	print('isoforms to try', len(data) - 1)
 	data =  [numpy.asarray(i) for i in data]
 	data = numpy.asarray(data)
 	
@@ -262,7 +252,6 @@ def mean_isoforms(source):
 	for col in dataframe.columns:
 		dataframe[col] = dataframe[col].astype(str)
 
-	# contar isoformas por genes
 	isocount = dataframe[['GeneID', 'IsoID']].groupby('GeneID').count().sort_values('IsoID', ascending=False)
 	isoforms_genes_mean = isocount.mean()
 	print("mean isoforms", isoforms_genes_mean)
@@ -271,14 +260,14 @@ def mean_isoforms(source):
 def sum_genes_samples(source):
 	data = fase_1(source)
 	data = [x.split(',') for x in data]
-	# total isoformas
-	print('isoformas', len(data) - 1)
-	# contar cuantas isoformas son 0 en todas las muestras
+
+	print('isoforms', len(data) - 1)
+
 	count_iso_cero = [i for i in data[1:] if iscero(i[2:])]
-	print('isoformas cero', len(count_iso_cero))
-	# eliminar todas las isoformas que son 0 en todas las muestras
+	print('isoforms 0', len(count_iso_cero))
+
 	data = data[:1] + [i for i in data[1:] if not iscero(i[2:])]
-	print('isoformas a tratar', len(data) - 1)
+	print('isoforms to try', len(data) - 1)
 	data =  [numpy.asarray(i) for i in data]
 	data = numpy.asarray(data)
 
@@ -288,7 +277,6 @@ def sum_genes_samples(source):
 	for col in dataframe.columns[2:]:
 		dataframe[col] = pandas.to_numeric(dataframe[col])
 
-	# contar isoformas por genes
 	genes = dataframe.drop(['IsoID'],axis=1)
 	genes = genes.groupby('GeneID').sum()
 	return genes
