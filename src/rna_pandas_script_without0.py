@@ -1,8 +1,3 @@
-# 2018-09-04
-# cantidad media de isoformas por gen
-# cantidad de genes
-
-
 import numpy
 import sys
 import copy
