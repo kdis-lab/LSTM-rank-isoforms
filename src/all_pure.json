@@ -1,0 +1,69 @@
+{
+  "reportsDir": "/home/lstm/evaluations/",
+  "metric": "val_twomix_acc",
+  "metric_mode": "max",
+  "epochs": 100,
+  "seed": 7,
+  "folds": 10,
+  "datasets": [
+    {
+		"name": "BLCA",
+		"file": "data3/BLCA-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "CHOL",
+		"file": "data3/CHOL-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "ESCA",
+		"file": "data3/ESCA-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "LIHC",
+		"file": "data3/LIHC-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "READ",
+		"file": "data3/READ-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "SKCM",
+		"file": "data3/SKCM-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "STAD",
+		"file": "data3/STAD-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "STES",
+		"file": "data3/STES-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "UCEC",
+		"file": "data3/UCEC-2.txt_gen",
+      "batch": [4],
+	  "genes": [50]
+    }
+  ],
+  "optimizers": [
+	"adam",
+	"rmsprop",
+	"sgd"
+  ]
+}

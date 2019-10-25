@@ -1,0 +1,69 @@
+{
+  "reportsDir": "/home/lstm/evaluations/",
+  "metric": "val_twomix_acc",
+  "metric_mode": "max",
+  "epochs": 100,
+  "seed": 7,
+  "folds": 10,
+  "datasets": [
+    {
+		"name": "kirc",
+		"file": "data3/kirc_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "brca",
+		"file": "data3/brca_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "hnsc",
+		"file": "data3/hnsc_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "kich",
+		"file": "data3/kich_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "thca",
+		"file": "data3/thca_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "luad",
+		"file": "data3/luad_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "lusc",
+		"file": "data3/lusc_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "prad",
+		"file": "data3/prad_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    },
+	{
+		"name": "coad",
+		"file": "data3/coad_iso_iktsptpm_paired-filtered.txt",
+      "batch": [4],
+	  "genes": [50]
+    }
+  ],
+  "optimizers": [
+	"adam",
+	"rmsprop",
+	"sgd"
+  ]
+}
