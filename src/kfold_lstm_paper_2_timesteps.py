@@ -44,7 +44,7 @@ def one_fold(mapitems):
 	
 	if optimizer == "sgd":
 		callbacks.append(
-			ReduceLROnPlateau(monitor=metric, factor=0.6, mode=metric_mode, verbose=1))
+			ReduceLROnPlateau(monitor=metric, factor=0.2, mode=metric_mode, verbose=1))
 	callbacks.append(EpochsRegister(join(dirpath, 'epochs.txt'),
 									join(dirpath, 'epochs-mean.txt')))
 	# end callbacks
